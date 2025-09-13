@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { faker } from '@faker-js/faker';
 
 interface Message {
   username: string;
@@ -100,6 +101,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.eventSource = null;
       this.isConnected = false;
     }
+  }
+
+  generateMessageByMagic() {
+    const sentences = Math.random() > 0.5 ? 2 : 1;
+    this.newMessage = faker.lorem.sentences(sentences);
   }
 
   private scrollToBottom() {

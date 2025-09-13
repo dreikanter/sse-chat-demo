@@ -62,6 +62,11 @@
                   required>
                 <button type="submit" class="btn btn-primary" [disabled]="!newMessage.trim()">Send</button>
               </div>
+              <small class="form-text text-muted">
+                <a href="#" class="text-decoration-none text-muted" (click)="generateMessageByMagic(); $event.preventDefault()">
+                  ✨ Generate a message with magic
+                </a>
+              </small>
             </form>
           </div>
         </div>
