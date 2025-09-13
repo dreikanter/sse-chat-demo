@@ -2,7 +2,7 @@
 
 A simple Server-Sent Events (SSE) based chat application using Angular frontend and Node.js backend. No persistence, no history, no authentication. Pure fun.
 
-![SSE Chat Demo](https://youtu.be/4jDW4KcO4JM?si=TERysFR1aZzqiX7j)
+https://github.com/user-attachments/assets/cedfce6f-7aaf-4b8c-9a79-1547d5e2c5af
 
 ## Quick Start
 
