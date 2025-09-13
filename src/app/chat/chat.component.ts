@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 interface Message {
@@ -20,7 +20,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   isConnected: boolean = false;
   private eventSource: EventSource | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private ngZone: NgZone) {}
 
   ngOnInit() {
     this.generateRandomUsername();
@@ -50,17 +50,23 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.eventSource = new EventSource('http://localhost:3000/events');
 
     this.eventSource.onopen = () => {
-      this.isConnected = true;
+      this.ngZone.run(() => {
+        this.isConnected = true;
+      });
     };
 
     this.eventSource.onmessage = (event) => {
-      const message: Message = JSON.parse(event.data);
-      this.messages.push(message);
-      this.scrollToBottom();
+      this.ngZone.run(() => {
+        const message: Message = JSON.parse(event.data);
+        this.messages.push(message);
+        this.scrollToBottom();
+      });
     };
 
     this.eventSource.onerror = () => {
-      this.isConnected = false;
+      this.ngZone.run(() => {
+        this.isConnected = false;
+      });
     };
   }
 
