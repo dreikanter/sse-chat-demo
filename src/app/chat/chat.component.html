@@ -1,46 +1,71 @@
-<div class="chat-container">
+<div class="container-fluid">
   <!-- Login Form -->
-  <div *ngIf="!isLoggedIn" class="login-form">
-    <h2>Join the Chat</h2>
-    <div>
-      <input
-        [(ngModel)]="username"
-        placeholder="Enter your username"
-        (keypress)="onKeyPress($event)"
-        maxlength="20">
-      <button (click)="login()">Join Chat</button>
+  <div *ngIf="!isLoggedIn" class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card" style="width: 400px;">
+      <div class="card-header text-center">
+        <h2 class="mb-0">Join the Chat</h2>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="login()">
+          <div class="input-group">
+            <input
+              [(ngModel)]="username"
+              name="username"
+              class="form-control"
+              placeholder="Enter your username"
+              (keypress)="onKeyPress($event)"
+              maxlength="20"
+              required>
+            <button type="submit" class="btn btn-primary">Join Chat</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
   <!-- Chat Interface -->
-  <div *ngIf="isLoggedIn">
-    <div class="chat-header">
-      <h2>SSE Chat - Welcome, {{username}}!</h2>
-    </div>
+  <div *ngIf="isLoggedIn" class="container mt-3">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-6">
+        <div class="card">
+          <div class="card-header text-center">
+            <h2 class="mb-0">SSE Chat - Welcome, {{username}}!</h2>
+          </div>
+          <div class="card-body">
+            <!-- Connection Status -->
+            <div class="alert mb-3" [ngClass]="isConnected ? 'alert-success' : 'alert-danger'">
+              <strong>{{isConnected ? '🟢 Connected' : '🔴 Disconnected'}}</strong>
+            </div>
 
-    <!-- Connection Status -->
-    <div class="connection-status" [ngClass]="isConnected ? 'connected' : 'disconnected'">
-      {{isConnected ? 'Connected' : 'Disconnected'}}
-    </div>
+            <!-- Messages -->
+            <div class="border rounded p-3 mb-3 bg-light" style="height: 400px; overflow-y: auto;">
+              <div *ngFor="let message of messages" class="mb-2">
+                <div class="card card-body py-2">
+                  <div class="text-muted small mb-1">
+                    <strong>{{message.username}}</strong> - {{message.timestamp | date:'short'}}
+                  </div>
+                  <div>{{message.message}}</div>
+                </div>
+              </div>
+            </div>
 
-    <!-- Messages -->
-    <div class="messages">
-      <div *ngFor="let message of messages" class="message">
-        <div class="message-header">
-          {{message.username}} - {{message.timestamp | date:'short'}}
+            <!-- Message Input -->
+            <form (ngSubmit)="sendMessage()">
+              <div class="input-group">
+                <input
+                  [(ngModel)]="newMessage"
+                  name="message"
+                  class="form-control"
+                  placeholder="Type your message..."
+                  (keypress)="onKeyPress($event)"
+                  maxlength="500"
+                  required>
+                <button type="submit" class="btn btn-primary" [disabled]="!newMessage.trim()">Send</button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div>{{message.message}}</div>
       </div>
-    </div>
-
-    <!-- Message Input -->
-    <div class="message-form">
-      <input
-        [(ngModel)]="newMessage"
-        placeholder="Type your message..."
-        (keypress)="onKeyPress($event)"
-        maxlength="500">
-      <button (click)="sendMessage()" [disabled]="!newMessage.trim()">Send</button>
     </div>
   </div>
 </div>
