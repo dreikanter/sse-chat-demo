@@ -32,12 +32,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   generateRandomUsername() {
-    const adjectives = ['Happy', 'Clever', 'Brave', 'Funny', 'Kind', 'Smart', 'Cool', 'Nice'];
-    const animals = ['Cat', 'Dog', 'Bird', 'Fish', 'Bear', 'Lion', 'Tiger', 'Fox'];
-    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-    const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
-    const randomNumber = Math.floor(Math.random() * 100);
-    this.username = `${randomAdjective}${randomAnimal}${randomNumber}`;
+    this.username = faker.internet.username();
   }
 
   login() {

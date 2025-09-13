@@ -4,5 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   template: `<app-chat></app-chat>`
 })
+
 export class AppComponent {
 }
