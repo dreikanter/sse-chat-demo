@@ -1,0 +1,46 @@
+<div class="chat-container">
+  <!-- Login Form -->
+  <div *ngIf="!isLoggedIn" class="login-form">
+    <h2>Join the Chat</h2>
+    <div>
+      <input
+        [(ngModel)]="username"
+        placeholder="Enter your username"
+        (keypress)="onKeyPress($event)"
+        maxlength="20">
+      <button (click)="login()">Join Chat</button>
+    </div>
+  </div>
+
+  <!-- Chat Interface -->
+  <div *ngIf="isLoggedIn">
+    <div class="chat-header">
+      <h2>SSE Chat - Welcome, {{username}}!</h2>
+    </div>
+
+    <!-- Connection Status -->
+    <div class="connection-status" [ngClass]="isConnected ? 'connected' : 'disconnected'">
+      {{isConnected ? 'Connected' : 'Disconnected'}}
+    </div>
+
+    <!-- Messages -->
+    <div class="messages">
+      <div *ngFor="let message of messages" class="message">
+        <div class="message-header">
+          {{message.username}} - {{message.timestamp | date:'short'}}
+        </div>
+        <div>{{message.message}}</div>
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <div class="message-form">
+      <input
+        [(ngModel)]="newMessage"
+        placeholder="Type your message..."
+        (keypress)="onKeyPress($event)"
+        maxlength="500">
+      <button (click)="sendMessage()" [disabled]="!newMessage.trim()">Send</button>
+    </div>
+  </div>
+</div>
