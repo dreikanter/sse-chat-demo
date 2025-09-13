@@ -1,6 +1,6 @@
 # SSE Chat Application
 
-A simple Server-Sent Events (SSE) based chat application using Angular frontend and Node.js backend.
+A simple Server-Sent Events (SSE) based chat application using Angular frontend and Node.js backend. No persistence, no history, no authentication. Pure fun.
 
 ## Quick Start
 

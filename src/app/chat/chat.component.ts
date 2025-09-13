@@ -6,6 +6,7 @@ interface Message {
   username: string;
   message: string;
   timestamp: string;
+  id?: string;
 }
 
 @Component({
@@ -20,6 +21,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   newMessage: string = '';
   isConnected: boolean = false;
   private eventSource: EventSource | null = null;
+  private lastMessageCount: number = 0;
+  private lastSentMessageId: string | null = null;
 
   constructor(private http: HttpClient, private ngZone: NgZone) {}
 
@@ -55,6 +58,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.ngZone.run(() => {
         const message: Message = JSON.parse(event.data);
         this.messages.push(message);
+        this.lastMessageCount = this.messages.length;
         this.scrollToBottom();
       });
     };
@@ -68,10 +72,14 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendMessage() {
     if (this.newMessage.trim()) {
+      const messageId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
       const messageData = {
         username: this.username,
-        message: this.newMessage
+        message: this.newMessage,
+        id: messageId
       };
+
+      this.lastSentMessageId = messageId;
 
       this.http.post('http://localhost:3000/message', messageData).subscribe({
         next: () => {
@@ -98,6 +106,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  isNewMessage(index: number): boolean {
+    const message = this.messages[index];
+    const isLatest = index === this.messages.length - 1;
+    const isFromOtherUser = message.username !== this.username;
+    const isNotMySentMessage = message.id !== this.lastSentMessageId;
+
+    return isLatest && isFromOtherUser && isNotMySentMessage && index >= this.lastMessageCount - 1;
+  }
+
   generateMessageByMagic() {
     const sentences = Math.random() > 0.5 ? 2 : 1;
     this.newMessage = faker.lorem.sentences(sentences);
@@ -105,10 +122,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private scrollToBottom() {
     setTimeout(() => {
-      const messagesContainer = document.querySelector('.messages');
+      const messagesContainer = document.querySelector('.border.rounded.p-3.mb-3.bg-light');
       if (messagesContainer) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }
-    }, 10);
+    }, 50); // Even faster delay for quicker autoscroll
   }
 }

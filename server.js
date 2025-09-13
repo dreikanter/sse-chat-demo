@@ -29,12 +29,13 @@ app.get('/events', (req, res) => {
 });
 
 app.post('/message', (req, res) => {
-  const { message, username } = req.body;
+  const { message, username, id } = req.body;
 
   const messageData = {
     username,
     message,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    id
   };
 
   clients.forEach(client => {
